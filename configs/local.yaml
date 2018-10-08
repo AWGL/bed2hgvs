@@ -1,0 +1,5 @@
+preferred_transcript_map: /Users/josephhalstead/Documents/bed2hgvs/config/transcript_gene_map.csv
+
+mutalyser_url: https://mutalyzer.nl/services/?wsdl
+
+mutalyzer_build: hg19

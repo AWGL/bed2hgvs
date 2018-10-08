@@ -1,0 +1,5 @@
+preferred_transcript_map: configs/test_fail_transcript_gene_map.csv
+
+mutalyser_url: https://mutalyzer.nl/services/?wsdl
+
+mutalyzer_build: hg19
