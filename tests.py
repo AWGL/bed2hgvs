@@ -40,9 +40,24 @@ class ProcessBedFileTest(unittest.TestCase):
 
 		"""
 
-		config = parse_config('configs/test_fail.yaml')
+		correct_data = ['ERROR1']
 
-		self.assertRaises(RuntimeError, process_bed_file, 'test_data/error_different_transcripts.bed', config, 'test_data/error_different_transcripts.bed')
+		config = parse_config('configs/test_pass.yaml')
+
+		process_bed_file('test_data/error_different_transcripts.bed', config, 'test_data/error_different_transcripts_output.bed')
+
+		with open('test_data/error_different_transcripts_output.bed', 'r') as csvfile:
+
+			spamreader = csv.reader(csvfile, delimiter='\t')
+
+			i = 0
+
+			for row in spamreader:
+
+				self.assertEqual(row[3], correct_data[i])
+
+				i = i + 1
+
 
 
 	def test_fail_unknown_transcripts(self):
@@ -53,7 +68,7 @@ class ProcessBedFileTest(unittest.TestCase):
 
 		config = parse_config('configs/test_fail.yaml')
 
-		correct_data = ['ERROR', 'TP53:c.919+5_c.919+2']
+		correct_data = ['ERROR2', 'TP53:c.919+5_c.919+2']
 
 		process_bed_file('test_data/error_unknown_transcripts.bed', config, 'test_data/error_unknown_transcripts_output.bed')
 
@@ -68,6 +83,7 @@ class ProcessBedFileTest(unittest.TestCase):
 				self.assertEqual(row[3], correct_data[i])
 
 				i = i + 1
+
 
 
 if __name__ == '__main__':

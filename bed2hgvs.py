@@ -156,6 +156,7 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 			
 				break
 
+		# If we have not found a transcript in the gene_transcript_map file.
 		if found_transcript == False:
 
 			hgvsc_dict[i] = [None, None]
@@ -163,14 +164,12 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 	if hgvsc_dict[0][0] != hgvsc_dict[1][0]:
 
 		print ('Transcript mismatch between bed start and end. Gaps are not allowed to span multiple transcripts - please investigate.')
-		raise
+		return 'ERROR1'
 
 	if hgvsc_dict[0][0] == None or hgvsc_dict[1][0] == None:
 
 		print('No transcript could be determined for this line in the BED file - try adding the transcript to the preferred_transcript_map file.')
-		return 'ERROR'
-
-
+		return 'ERROR2'
 
 	gene_name = wsdl_o.getGeneName(build=config['mutalyzer_build'], accno=hgvsc_dict[0][0])
 
@@ -217,7 +216,6 @@ def process_bed_file(bed_file_location, config_dict, output_location):
 		for row in bed_list:
 
 			spamwriter.writerow(row)
-
 
 def main():
 
