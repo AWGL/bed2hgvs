@@ -1,5 +1,5 @@
 # Location of the transcript_gene_map
-preferred_transcript_map: /Users/josephhalstead/Documents/bed2hgvs/config/transcript_gene_map.csv
+preferred_transcript_map: /Users/josephhalstead/Documents/bed2hgvs/configs/transcript_gene_map.csv
 # The mutalyzer URL to use
 mutalyser_url: https://mutalyzer.nl/services/?wsdl
 # Genome build to use

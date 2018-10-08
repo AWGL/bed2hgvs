@@ -63,3 +63,5 @@ To run tests:
 Only works within a transcript - e.g. will annotate with error if the region spans multiple transcripts.
 
 Does not take into account the strand of the gene. 
+
+Uses remote Mutalyzer - we should really use local installation

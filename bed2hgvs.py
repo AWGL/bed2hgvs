@@ -44,7 +44,7 @@ def get_hgvsc_from_hgvsg(hgvs_g, wsdl_o, config):
 
 def create_transcript_dict(response):
 	"""
-	The mutalyser API returns a list of HGVSc nomanclature for different transcripts \
+	The mutalyser API returns a list of HGVSc nomenclature for different transcripts \
 	that the variant falls in. This function creates a dictionary with each transcript \
 	as a key and the HGVSc for the transcript as the value.
 
@@ -193,8 +193,24 @@ def process_bed_file(bed_file_location, config_dict, output_location):
 
 	URL = config_dict['mutalyser_url']
 
-	client = Client(URL, cache=None)
-	wsdl_o = client.service
+
+	try:
+
+		client = Client(URL, cache=None)
+		wsdl_o = client.service
+
+		#Get info for logging
+		info = dict(wsdl_o.info())
+
+		print('Using Mutalyser: {mut_version} with nomenclature version {nom_version}'.format(
+			mut_version = info['version'],
+			nom_version = info['nomenclatureVersion']
+			))
+
+	except:
+
+		print('ERROR: Could not connect to Mutalyser')
+		quit()
 
 	bed_list = []
 
