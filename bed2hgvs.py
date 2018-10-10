@@ -132,6 +132,8 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 	start_variant_transcripts = create_transcript_dict(dict(response_start))
 	end_variant_transcripts = create_transcript_dict(dict(response_end))
 
+
+
 	variant_transcripts = [start_variant_transcripts, end_variant_transcripts]
 
 	hgvsc_dict = {}
@@ -173,11 +175,25 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 
 	gene_name = wsdl_o.getGeneName(build=config['mutalyzer_build'], accno=hgvsc_dict[0][0])
 
-	annotation  = '{gene_name}:{start}_{end}'.format(
-		gene_name=gene_name,
-		start = hgvsc_dict[0][1].split(':')[-1][:-3],
-		end = hgvsc_dict[1][1].split(':')[-1][:-3]
-		)
+	location = wsdl_o.getGeneLocation(build=config['mutalyzer_build'], gene=gene_name)
+
+	strand = dict((location))['orientation']
+
+	if strand == 'reverse':
+
+		annotation  = '{gene_name}:{start}_{end}'.format(
+			gene_name=gene_name,
+			start = hgvsc_dict[1][1].split(':')[-1][:-3],
+			end = hgvsc_dict[0][1].split(':c.')[-1][:-3]
+			)
+
+	else:
+
+		annotation  = '{gene_name}:{start}_{end}'.format(
+			gene_name=gene_name,
+			start = hgvsc_dict[0][1].split(':')[-1][:-3],
+			end = hgvsc_dict[1][1].split(':c.')[-1][:-3]
+			)	
 
 	return annotation
 
@@ -202,10 +218,12 @@ def process_bed_file(bed_file_location, config_dict, output_location):
 		#Get info for logging
 		info = dict(wsdl_o.info())
 
-		print('Using Mutalyser: {mut_version} with nomenclature version {nom_version}'.format(
+		info_string = 'Using Mutalyser: {mut_version} with nomenclature version {nom_version}'.format(
 			mut_version = info['version'],
 			nom_version = info['nomenclatureVersion']
-			))
+			)
+
+		print(info_string)
 
 	except:
 
@@ -216,9 +234,9 @@ def process_bed_file(bed_file_location, config_dict, output_location):
 
 	with open(bed_file_location, 'r') as csvfile:
 
-		spamreader = csv.reader(csvfile, delimiter='\t')
+		reader = csv.reader(csvfile, delimiter='\t')
 
-		for row in spamreader:
+		for row in reader:
 
 			hgvs_description = process_bed_line(row[0], row[1], row[2],wsdl_o, transcript_map, config_dict )
 
@@ -227,11 +245,14 @@ def process_bed_file(bed_file_location, config_dict, output_location):
 
 	with open(output_location, 'w') as csvfile:
 
-		spamwriter = csv.writer(csvfile, delimiter='\t')
+		# Add header to bed file.
+		csvfile.write('#track name=coverage_gaps description="{info} coverage gaps annotated"\n'.format(info=info_string))
+
+		writer = csv.writer(csvfile, delimiter='\t')
 
 		for row in bed_list:
 
-			spamwriter.writerow(row)
+			writer.writerow(row)
 
 def main():
 

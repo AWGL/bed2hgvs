@@ -13,9 +13,9 @@ class ProcessBedFileTest(unittest.TestCase):
 		"""
 
 
-		correct_data = ['TP53:c.*5_c.1181', 'TP53:c.1100+5_c.1033', 'TP53:c.919+5_c.919+2',
-			'TP53:c.782+5_c.773', 'TP53:c.730_c.673-5', 'TP53:c.205_c.180', 'TP53:c.99_c.97-5',
-			'TP53:c.96+5_c.75-5', 'TP53:c.74+5_c.65']
+		correct_data = ['TP53:c.1181_*5', 'TP53:c.1033_1100+5', 'TP53:c.919+2_919+5',
+			'TP53:c.773_782+5', 'TP53:c.673-5_730', 'TP53:c.180_205', 'TP53:c.97-5_99',
+			'TP53:c.75-5_96+5', 'TP53:c.65_74+5']
 
 		config = parse_config('configs/test_pass.yaml')
 
@@ -24,6 +24,8 @@ class ProcessBedFileTest(unittest.TestCase):
 		with open('test_data/pass_output.bed', 'r') as csvfile:
 
 			spamreader = csv.reader(csvfile, delimiter='\t')
+
+			next(spamreader, None)
 
 			i = 0
 
@@ -50,6 +52,8 @@ class ProcessBedFileTest(unittest.TestCase):
 
 			spamreader = csv.reader(csvfile, delimiter='\t')
 
+			next(spamreader, None)
+
 			i = 0
 
 			for row in spamreader:
@@ -68,13 +72,15 @@ class ProcessBedFileTest(unittest.TestCase):
 
 		config = parse_config('configs/test_fail.yaml')
 
-		correct_data = ['ERROR2', 'TP53:c.919+5_c.919+2']
+		correct_data = ['ERROR2', 'TP53:c.919+2_919+5']
 
 		process_bed_file('test_data/error_unknown_transcripts.bed', config, 'test_data/error_unknown_transcripts_output.bed')
 
 		with open('test_data/error_unknown_transcripts_output.bed', 'r') as csvfile:
 
 			spamreader = csv.reader(csvfile, delimiter='\t')
+
+			next(spamreader, None)
 
 			i = 0
 
@@ -85,6 +91,31 @@ class ProcessBedFileTest(unittest.TestCase):
 				i = i + 1
 
 
+	def test_gene_on_forward_strand(self):
+		"""
+		Test program works on genes on the forward strand.
+
+		"""
+
+		correct_data = ['EGFR:c.-175_-161', 'EGFR:c.31_80']
+
+		config = parse_config('configs/test_pass.yaml')
+
+		process_bed_file('test_data/forward_test.bed', config, 'test_data/forward_test_output.bed')
+
+		with open('test_data/forward_test_output.bed', 'r') as csvfile:
+
+			spamreader = csv.reader(csvfile, delimiter='\t')
+
+			next(spamreader, None)
+
+			i = 0
+
+			for row in spamreader:
+
+				self.assertEqual(row[3], correct_data[i])
+
+				i = i + 1
 
 if __name__ == '__main__':
     unittest.main()
