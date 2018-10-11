@@ -32,7 +32,7 @@ Install Miniconda from https://conda.io/miniconda.html
 
 A virtual environment called bed2hgvs can then be created using the following command:
 
-`conda env create -f envs.main.yaml `
+`conda env create -f envs/main.yaml `
 
 `source activate bed2hgvs`
 
@@ -61,7 +61,5 @@ To run tests:
 ## Limitations
 
 Only works within a transcript - e.g. will annotate with error if the region spans multiple transcripts.
-
-Does not take into account the strand of the gene. 
 
 Uses remote Mutalyzer - we should really use local installation
