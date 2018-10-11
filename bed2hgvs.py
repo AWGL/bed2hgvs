@@ -179,6 +179,7 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 
 	strand = dict((location))['orientation']
 
+	# Swap around depending on gene orientation.
 	if strand == 'reverse':
 
 		annotation  = '{gene_name}:{start}_{end}'.format(
