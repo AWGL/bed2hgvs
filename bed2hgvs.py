@@ -2,6 +2,8 @@ import yaml
 from suds.client import Client
 import csv
 import argparse
+from collections import OrderedDict
+
 
 def parse_config(config_location):
 	"""
@@ -31,7 +33,7 @@ def get_hgvsc_from_hgvsg(hgvs_g, wsdl_o, config):
 
 	Output:
 
-	A responce with the hgvsc for the transcripts the hgvsg falls within.
+	A response with the hgvsc for the transcripts the hgvsg falls within.
 
 	"""
 
@@ -58,7 +60,7 @@ def create_transcript_dict(response):
 
 	"""
 
-	transcript_dict = {}
+	transcript_dict = OrderedDict()
 
 	for hgvsc in response['string']:
 
@@ -83,15 +85,15 @@ def parse_transcript_gene_map(config):
 	
 	"""
 
-	transcript_gene_dict = {}
+	transcript_gene_dict = OrderedDict()
 
 	with open(config['preferred_transcript_map'], 'r') as csvfile:
 
-		spamreader = csv.reader(csvfile, delimiter=',')
+		spamreader = csv.reader(csvfile, delimiter='\t')
 
 		for row in spamreader:
 
-			transcript_gene_dict[row[0]] = row[1]
+			transcript_gene_dict[row[0].strip()] = row[1].strip()
 
 	return transcript_gene_dict
 
@@ -132,8 +134,6 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 	start_variant_transcripts = create_transcript_dict(dict(response_start))
 	end_variant_transcripts = create_transcript_dict(dict(response_end))
 
-
-
 	variant_transcripts = [start_variant_transcripts, end_variant_transcripts]
 
 	hgvsc_dict = {}
@@ -146,11 +146,8 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 
 		for key in variant_transcript:
 
-
-			# if the user has added this as the preferred transcript
-			if key in transcript_map:
-
-				print(key,variant_transcript[key])
+			# if the user has added this as the preferred transcript  (just use first instance in dict)
+			if key in transcript_map.values():
 
 				hgvsc_dict[i] = [key,variant_transcript[key]]
 
