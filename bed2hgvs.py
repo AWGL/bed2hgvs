@@ -45,7 +45,7 @@ def get_hgvsc_from_hgvsg(hgvs_g, wsdl_o, config):
 
 	except:
 
-		print('Error could not make connection to database - try restarting Mutalyser')
+		print('ERROR: Could not make connection to database - ensure settings.py is a environment variable.')
 		quit()
 
 	return response
