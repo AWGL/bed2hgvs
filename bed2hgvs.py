@@ -39,7 +39,14 @@ def get_hgvsc_from_hgvsg(hgvs_g, wsdl_o, config):
 
 	build = config['mutalyzer_build']
 
-	response = wsdl_o.numberConversion(build=build, variant=hgvs_g)
+	try:
+
+		response = wsdl_o.numberConversion(build=build, variant=hgvs_g)
+
+	except:
+
+		print('Error could not make connection to database - try restarting Mutalyser')
+		quit()
 
 	return response
 

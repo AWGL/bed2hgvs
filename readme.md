@@ -50,7 +50,7 @@ The transcript_gene_map.csv should also be edited so that it contains the transc
 
 To run the program use the following command:
 
-`python bed2hgvs.py --config_location config/local.yaml --input tests/test_data/pass.bed --output pass.hgvs.bed `
+`python bed2hgvs.py --config_location config/local.yaml --input tests/test_data/pass.bed --output pass.hgvs.bed --transcript_map configs/TruSightMyeloid_PreferredTranscripts.txt `
 
 ## Test
 
