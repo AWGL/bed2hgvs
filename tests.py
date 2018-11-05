@@ -13,13 +13,13 @@ class ProcessBedFileTest(unittest.TestCase):
 		"""
 
 
-		correct_data = ['TP53:c.1181_*5', 'TP53:c.1033_1100+5', 'TP53:c.919+2_919+5',
-			'TP53:c.773_782+5', 'TP53:c.673-5_730', 'TP53:c.180_205', 'TP53:c.97-5_99',
-			'TP53:c.75-5_96+5', 'TP53:c.65_74+5']
+		correct_data = ['TP53(NM_000546.4):c.1181_*5', 'TP53(NM_000546.4):c.1033_1100+5', 'TP53(NM_000546.4):c.919+2_919+5',
+			'TP53(NM_000546.4):c.773_782+5', 'TP53(NM_000546.4):c.673-5_730', 'TP53(NM_000546.4):c.180_205', 'TP53(NM_000546.4):c.97-5_99',
+			'TP53(NM_000546.4):c.75-5_96+5', 'TP53(NM_000546.4):c.65_74+5']
 
 		config = parse_config('configs/test_pass.yaml')
 
-		process_bed_file('test_data/pass.bed', config, 'test_data/pass_output.bed')
+		process_bed_file('test_data/pass.bed', config, 'test_data/pass_output.bed', 'configs/test_pass_transcript_gene_map.csv')
 
 		with open('test_data/pass_output.bed', 'r') as csvfile:
 
@@ -46,7 +46,7 @@ class ProcessBedFileTest(unittest.TestCase):
 
 		config = parse_config('configs/test_pass.yaml')
 
-		process_bed_file('test_data/error_different_transcripts.bed', config, 'test_data/error_different_transcripts_output.bed')
+		process_bed_file('test_data/error_different_transcripts.bed', config, 'test_data/error_different_transcripts_output.bed', 'configs/test_pass_transcript_gene_map.csv')
 
 		with open('test_data/error_different_transcripts_output.bed', 'r') as csvfile:
 
@@ -72,9 +72,9 @@ class ProcessBedFileTest(unittest.TestCase):
 
 		config = parse_config('configs/test_fail.yaml')
 
-		correct_data = ['ERROR2', 'TP53:c.919+2_919+5']
+		correct_data = ['ERROR2', 'TP53(NM_000546.4):c.919+2_919+5']
 
-		process_bed_file('test_data/error_unknown_transcripts.bed', config, 'test_data/error_unknown_transcripts_output.bed')
+		process_bed_file('test_data/error_unknown_transcripts.bed', config, 'test_data/error_unknown_transcripts_output.bed','configs/test_fail_transcript_gene_map.csv' )
 
 		with open('test_data/error_unknown_transcripts_output.bed', 'r') as csvfile:
 
@@ -97,11 +97,11 @@ class ProcessBedFileTest(unittest.TestCase):
 
 		"""
 
-		correct_data = ['EGFR:c.-175_-161', 'EGFR:c.31_80']
+		correct_data = ['EGFR(NM_005228.3):c.-175_-161', 'EGFR(NM_005228.3):c.31_80']
 
 		config = parse_config('configs/test_pass.yaml')
 
-		process_bed_file('test_data/forward_test.bed', config, 'test_data/forward_test_output.bed')
+		process_bed_file('test_data/forward_test.bed', config, 'test_data/forward_test_output.bed', 'configs/test_pass_transcript_gene_map.csv')
 
 		with open('test_data/forward_test_output.bed', 'r') as csvfile:
 

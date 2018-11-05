@@ -68,7 +68,7 @@ def create_transcript_dict(response):
 
 	return transcript_dict
 
-def parse_transcript_gene_map(config):
+def parse_transcript_gene_map(transcript_map_location):
 	"""
 	Parse the transcript gene map CSV file into a dictionary.
 
@@ -87,7 +87,7 @@ def parse_transcript_gene_map(config):
 
 	transcript_gene_dict = OrderedDict()
 
-	with open(config['preferred_transcript_map'], 'r') as csvfile:
+	with open(transcript_map_location, 'r') as csvfile:
 
 		spamreader = csv.reader(csvfile, delimiter='\t')
 
@@ -146,6 +146,7 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 
 		for key in variant_transcript:
 
+
 			# if the user has added this as the preferred transcript  (just use first instance in dict)
 			if key in transcript_map.values():
 
@@ -154,6 +155,24 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 				found_transcript = True
 			
 				break
+
+			else:
+
+				#if we haven't found the transcript then look for another version of the same one
+
+				versionless_transcripts = []
+				transcript_map_values = transcript_map.values()
+
+				for value in transcript_map_values:
+
+					versionless_transcripts.append(value.split('.')[0])
+
+				if key.split('.')[0] in versionless_transcripts:
+
+					hgvsc_dict[i] = [key,variant_transcript[key]]
+
+					found_transcript = True
+					break
 
 		# If we have not found a transcript in the gene_transcript_map file.
 		if found_transcript == False:
@@ -179,31 +198,33 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 	# Swap around depending on gene orientation.
 	if strand == 'reverse':
 
-		annotation  = '{gene_name}:{start}_{end}'.format(
+		annotation  = '{gene_name}({transcript}):{start}_{end}'.format(
 			gene_name=gene_name,
 			start = hgvsc_dict[1][1].split(':')[-1][:-3],
-			end = hgvsc_dict[0][1].split(':c.')[-1][:-3]
+			end = hgvsc_dict[0][1].split(':c.')[-1][:-3],
+			transcript = hgvsc_dict[0][0]
 			)
 
 	else:
 
-		annotation  = '{gene_name}:{start}_{end}'.format(
+		annotation  = '{gene_name}({transcript}):{start}_{end}'.format(
 			gene_name=gene_name,
 			start = hgvsc_dict[0][1].split(':')[-1][:-3],
-			end = hgvsc_dict[1][1].split(':c.')[-1][:-3]
+			end = hgvsc_dict[1][1].split(':c.')[-1][:-3],
+			transcript = hgvsc_dict[0][0]
 			)	
 
 	return annotation
 
 
 
-def process_bed_file(bed_file_location, config_dict, output_location):
+def process_bed_file(bed_file_location, config_dict, output_location, transcript_map_location):
 	"""
 	Loop through a BED file and process each line with process_bed_line()
 
 	"""
 
-	transcript_map = parse_transcript_gene_map(config_dict)
+	transcript_map = parse_transcript_gene_map(transcript_map_location)
 
 	URL = config_dict['mutalyser_url']
 
@@ -255,20 +276,21 @@ def process_bed_file(bed_file_location, config_dict, output_location):
 def main():
 
 	parser = argparse.ArgumentParser(description='Annotate a BED file with the HGSVc of the location.')
-	parser.add_argument('--config_location', type=str, nargs=1,
+	parser.add_argument('--config_location', type=str, nargs=1, required=True,
 					help='The location of the YAML config.')
-	parser.add_argument('--input', type=str, nargs=1,
+	parser.add_argument('--input', type=str, nargs=1, required=True,
 					help='The input location of the original BED file.')
 	parser.add_argument('--output', type=str, nargs=1,
 					help='The output location to put the annotated BED file')
-
+	parser.add_argument('--transcript_map', type=str, nargs=1, required=True,
+					help='The location of the transcript gene map.')
 	args = parser.parse_args()
 
 	bed_file = args.input[0]
 
 	config = parse_config(args.config_location[0])
 
-	process_bed_file(bed_file, config, args.output[0])
+	process_bed_file(bed_file, config, args.output[0], args.transcript_map[0])
 
 if __name__ == '__main__':
 
