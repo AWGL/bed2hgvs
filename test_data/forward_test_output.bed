@@ -1,0 +1,3 @@
+#track name=coverage_gaps description="Using Mutalyser: 2.0.28 with nomenclature version 2.0 coverage gaps annotated"
+7	55086795	55086810	EGFR(NM_005228.3):c.-175_-161
+7	55087000	55087050	EGFR(NM_005228.3):c.31_80

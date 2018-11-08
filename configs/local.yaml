@@ -1,0 +1,4 @@
+# The mutalyzer URL to use
+mutalyser_url: https://mutalyzer.nl/services/?wsdl
+# Genome build to use
+mutalyzer_build: hg19

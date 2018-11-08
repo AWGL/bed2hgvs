@@ -1,0 +1,6 @@
+name: bed2hgvs
+dependencies:
+- python=3.6
+- pyyaml=3.13
+- pip:
+  - suds-py3==1.3.3.0
