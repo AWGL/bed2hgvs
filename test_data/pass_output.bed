@@ -1,4 +1,3 @@
-#track name=coverage_gaps description="Using Mutalyser: 2.0.28 with nomenclature version 2.0 coverage gaps annotated"
 17	7572921	7572928	TP53(NM_000546.4):c.1181_*5
 17	7573921	7573994	TP53(NM_000546.4):c.1033_1100+5
 17	7577013	7577017	TP53(NM_000546.4):c.919+2_919+5
