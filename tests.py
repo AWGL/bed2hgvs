@@ -25,8 +25,6 @@ class ProcessBedFileTest(unittest.TestCase):
 
 			spamreader = csv.reader(csvfile, delimiter='\t')
 
-			next(spamreader, None)
-
 			i = 0
 
 			for row in spamreader:
@@ -51,8 +49,6 @@ class ProcessBedFileTest(unittest.TestCase):
 		with open('test_data/error_different_transcripts_output.bed', 'r') as csvfile:
 
 			spamreader = csv.reader(csvfile, delimiter='\t')
-
-			next(spamreader, None)
 
 			i = 0
 
@@ -80,8 +76,6 @@ class ProcessBedFileTest(unittest.TestCase):
 
 			spamreader = csv.reader(csvfile, delimiter='\t')
 
-			next(spamreader, None)
-
 			i = 0
 
 			for row in spamreader:
@@ -106,8 +100,6 @@ class ProcessBedFileTest(unittest.TestCase):
 		with open('test_data/forward_test_output.bed', 'r') as csvfile:
 
 			spamreader = csv.reader(csvfile, delimiter='\t')
-
-			next(spamreader, None)
 
 			i = 0
 

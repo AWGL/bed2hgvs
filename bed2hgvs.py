@@ -264,15 +264,20 @@ def process_bed_file(bed_file_location, config_dict, output_location, transcript
 
 		for row in reader:
 
-			hgvs_description = process_bed_line(row[0], row[1], row[2],wsdl_o, transcript_map, config_dict )
+			if row[0][0] == '#':
 
-			bed_list.append([row[0], row[1], row[2], hgvs_description])
+				bed_list.append([row[0]])
+
+			else:
+
+				hgvs_description = process_bed_line(row[0], row[1], row[2],wsdl_o, transcript_map, config_dict )
+
+				bed_list.append([row[0], row[1], row[2], hgvs_description])
 
 
 	with open(output_location, 'w') as csvfile:
 
 		# Add header to bed file.
-		csvfile.write('#track name=coverage_gaps description="{info} coverage gaps annotated"\n'.format(info=info_string))
 
 		writer = csv.writer(csvfile, delimiter='\t')
 
