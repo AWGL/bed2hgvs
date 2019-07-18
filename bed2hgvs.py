@@ -92,7 +92,7 @@ def parse_transcript_gene_map(transcript_map_location):
 	
 	"""
 
-	transcript_gene_dict = OrderedDict()
+	transcript_gene_dict = []
 
 	with open(transcript_map_location, 'r') as csvfile:
 
@@ -100,7 +100,7 @@ def parse_transcript_gene_map(transcript_map_location):
 
 		for row in spamreader:
 
-			transcript_gene_dict[row[0].strip()] = row[1].strip()
+			transcript_gene_dict.append(row[1].strip())
 
 	return transcript_gene_dict
 
@@ -143,6 +143,8 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 
 	variant_transcripts = [start_variant_transcripts, end_variant_transcripts]
 
+	#print (variant_transcripts)
+
 	hgvsc_dict = {}
 
 	# Loop through both the start_variant_transcripts and end_variant_transcripts objects \
@@ -153,9 +155,8 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 
 		for key in variant_transcript:
 
-
 			# if the user has added this as the preferred transcript  (just use first instance in dict)
-			if key in transcript_map.values():
+			if key in transcript_map:
 
 				hgvsc_dict[i] = [key,variant_transcript[key]]
 
@@ -168,7 +169,7 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 				#if we haven't found the transcript then look for another version of the same one
 
 				versionless_transcripts = []
-				transcript_map_values = transcript_map.values()
+				transcript_map_values = transcript_map
 
 				for value in transcript_map_values:
 
@@ -192,6 +193,8 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 		return 'ERROR1'
 
 	if hgvsc_dict[0][0] == None or hgvsc_dict[1][0] == None:
+
+		print (hgvsc_dict)
 
 		print('No transcript could be determined for this line in the BED file - try adding the transcript to the preferred_transcript_map file.')
 		return 'ERROR2'
