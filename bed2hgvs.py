@@ -143,8 +143,6 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 
 	variant_transcripts = [start_variant_transcripts, end_variant_transcripts]
 
-	#print (variant_transcripts)
-
 	hgvsc_dict = {}
 
 	# Loop through both the start_variant_transcripts and end_variant_transcripts objects \
@@ -193,8 +191,6 @@ def process_bed_line(chr, start, end, wsdl_o, transcript_map, config):
 		return 'ERROR1'
 
 	if hgvsc_dict[0][0] == None or hgvsc_dict[1][0] == None:
-
-		print (hgvsc_dict)
 
 		print('No transcript could be determined for this line in the BED file - try adding the transcript to the preferred_transcript_map file.')
 		return 'ERROR2'
